@@ -1,4 +1,29 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { SearchBar } from "@/components/search/SearchBar";
+import { TabSelector } from "@/components/search/TabSelector";
+import type { ImageSource } from "@/types";
+
+const TABS = [
+  { id: "unsplash" as ImageSource, label: "Unsplash" },
+  { id: "pexels" as ImageSource, label: "Pexels" },
+  { id: "pixabay" as ImageSource, label: "Pixabay" },
+];
+
 export default function Home() {
+  const router = useRouter();
+  const [activeSource, setActiveSource] = useState<ImageSource>("unsplash");
+
+  const handleSearch = (query: string) => {
+    const params = new URLSearchParams();
+    params.set("query", query);
+    params.set("source", activeSource);
+    params.set("page", "1");
+    router.push(`/search?${params.toString()}`);
+  };
+
   return (
     <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="text-center">
@@ -8,9 +33,15 @@ export default function Home() {
         <p className="mt-4 text-lg text-gray-600">簡単にLGTM画像を生成しよう</p>
 
         <div className="mt-12">
-          {/* 検索フォームは後ほど実装 */}
           <div className="mx-auto max-w-2xl rounded-lg bg-white p-8 shadow-sm">
-            <p className="text-gray-500">検索フォームを実装中...</p>
+            <div className="mb-6 flex justify-center">
+              <TabSelector
+                tabs={TABS}
+                activeTab={activeSource}
+                onTabChange={setActiveSource}
+              />
+            </div>
+            <SearchBar onSearch={handleSearch} />
           </div>
         </div>
 
