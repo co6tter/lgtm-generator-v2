@@ -101,7 +101,8 @@ jobs:
       - name: Verify Deployment Health
         run: |
           sleep 10
-          response=$(curl -s -o /dev/null -w "%{http_code}" ${{ steps.deploy.outputs.url }}/healthz)
+          # Use production URL instead of preview URL to avoid SSO authentication
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://lgtm-generator-v2.vercel.app/healthz)
           if [ $response -eq 200 ]; then
             echo "✅ Health check passed"
           else
