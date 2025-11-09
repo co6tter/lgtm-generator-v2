@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import type { LGTMOptions, ProcessImageResult } from "@/lib/image-processor";
 import {
   copyImageToClipboard,
+  copyMarkdownToClipboard,
   downloadImage,
   processImageWithLGTM,
 } from "@/lib/image-processor";
@@ -12,8 +13,10 @@ export interface UseLGTMResult {
   isProcessing: boolean;
   error: Error | null;
   processedImage: ProcessImageResult | null;
+  originalImageUrl: string | null;
   generateLGTM: (imageUrl: string, options?: LGTMOptions) => Promise<void>;
-  copyToClipboard: () => Promise<void>;
+  copyImageToClipboard: () => Promise<void>;
+  copyMarkdown: () => Promise<void>;
   download: (filename?: string) => void;
   reset: () => void;
 }
@@ -27,6 +30,7 @@ export function useLGTM(): UseLGTMResult {
   const [error, setError] = useState<Error | null>(null);
   const [processedImage, setProcessedImage] =
     useState<ProcessImageResult | null>(null);
+  const [originalImageUrl, setOriginalImageUrl] = useState<string | null>(null);
 
   /**
    * Generate LGTM image from URL
@@ -35,6 +39,7 @@ export function useLGTM(): UseLGTMResult {
     async (imageUrl: string, options?: LGTMOptions) => {
       setIsProcessing(true);
       setError(null);
+      setOriginalImageUrl(imageUrl);
 
       try {
         const result = await processImageWithLGTM(imageUrl, options);
@@ -54,7 +59,7 @@ export function useLGTM(): UseLGTMResult {
   /**
    * Copy processed image to clipboard
    */
-  const copyToClipboard = useCallback(async () => {
+  const copyImage = useCallback(async () => {
     if (!processedImage) {
       throw new Error("No processed image available");
     }
@@ -68,6 +73,27 @@ export function useLGTM(): UseLGTMResult {
       throw error;
     }
   }, [processedImage]);
+
+  /**
+   * Copy markdown text to clipboard
+   * Format: ![LGTM](imageUrl)
+   */
+  const copyMarkdown = useCallback(async () => {
+    if (!originalImageUrl) {
+      throw new Error("No image URL available");
+    }
+
+    try {
+      await copyMarkdownToClipboard(originalImageUrl);
+    } catch (err) {
+      const error =
+        err instanceof Error
+          ? err
+          : new Error("Failed to copy markdown to clipboard");
+      setError(error);
+      throw error;
+    }
+  }, [originalImageUrl]);
 
   /**
    * Download processed image
@@ -97,14 +123,17 @@ export function useLGTM(): UseLGTMResult {
     setIsProcessing(false);
     setError(null);
     setProcessedImage(null);
+    setOriginalImageUrl(null);
   }, []);
 
   return {
     isProcessing,
     error,
     processedImage,
+    originalImageUrl,
     generateLGTM,
-    copyToClipboard,
+    copyImageToClipboard: copyImage,
+    copyMarkdown,
     download,
     reset,
   };

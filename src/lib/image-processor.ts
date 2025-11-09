@@ -190,6 +190,24 @@ export async function copyImageToClipboard(blob: Blob): Promise<void> {
 }
 
 /**
+ * Copy markdown text to clipboard
+ * Format: ![LGTM](imageUrl)
+ */
+export async function copyMarkdownToClipboard(imageUrl: string): Promise<void> {
+  try {
+    if (!navigator.clipboard || !navigator.clipboard.writeText) {
+      throw new Error("Clipboard API not supported");
+    }
+
+    const markdown = `![LGTM](${imageUrl})`;
+    await navigator.clipboard.writeText(markdown);
+  } catch (error) {
+    console.error("Error copying markdown to clipboard:", error);
+    throw new Error("マークダウンのコピーに失敗しました");
+  }
+}
+
+/**
  * Download image as file
  */
 export function downloadImage(blob: Blob, filename = "lgtm.png"): void {
