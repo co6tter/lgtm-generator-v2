@@ -9,6 +9,7 @@ import { SearchBar } from "@/components/search/SearchBar";
 import { TabSelector } from "@/components/search/TabSelector";
 import { ErrorMessage } from "@/components/ui/ErrorMessage";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { useLGTM } from "@/hooks/useLGTM";
 import { useSearch } from "@/hooks/useSearch";
 import type { Image, ImageSource } from "@/types";
 
@@ -41,6 +42,15 @@ function SearchPageContent() {
     perPage: 20,
   });
 
+  // LGTM generation hook
+  const {
+    isProcessing: isGeneratingLGTM,
+    generateLGTM,
+    copyToClipboard,
+    download,
+    reset: resetLGTM,
+  } = useLGTM();
+
   // Update URL when search parameters change
   const updateURL = (query: string, source: ImageSource, page: number) => {
     const params = new URLSearchParams();
@@ -72,28 +82,48 @@ function SearchPageContent() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Handle image click
-  const handleImageClick = (image: Image) => {
+  // Handle image click - generate LGTM image
+  const handleImageClick = async (image: Image) => {
     setSelectedImage(image);
+    // Generate LGTM image when modal opens
+    try {
+      await generateLGTM(image.url);
+    } catch (err) {
+      console.error("Failed to generate LGTM image:", err);
+    }
   };
 
   // Close modal
   const handleCloseModal = () => {
     setSelectedImage(null);
+    resetLGTM();
   };
 
-  // Handle copy (placeholder for now)
-  const handleCopy = () => {
-    // TODO: Implement LGTM image copy functionality
-    alert("コピー機能は後ほど実装されます");
-    handleCloseModal();
+  // Handle copy - copy LGTM image to clipboard
+  const handleCopy = async () => {
+    try {
+      await copyToClipboard();
+      // Show success message (you can replace with a toast notification)
+      alert("クリップボードにコピーしました！");
+      handleCloseModal();
+    } catch (err) {
+      console.error("Failed to copy to clipboard:", err);
+      alert(
+        "クリップボードへのコピーに失敗しました。ブラウザがクリップボードAPIをサポートしているか確認してください。",
+      );
+    }
   };
 
-  // Handle download (placeholder for now)
+  // Handle download - download LGTM image
   const handleDownload = () => {
-    // TODO: Implement LGTM image download functionality
-    alert("ダウンロード機能は後ほど実装されます");
-    handleCloseModal();
+    try {
+      const filename = `lgtm_${selectedImage?.id || Date.now()}.png`;
+      download(filename);
+      handleCloseModal();
+    } catch (err) {
+      console.error("Failed to download image:", err);
+      alert("画像のダウンロードに失敗しました");
+    }
   };
 
   // Sync with URL on mount
@@ -207,6 +237,7 @@ function SearchPageContent() {
           onCopy={handleCopy}
           onDownload={handleDownload}
           isOpen={true}
+          isLoading={isGeneratingLGTM}
         />
       )}
     </div>
