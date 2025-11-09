@@ -5,12 +5,6 @@
   "installCommand": "npm install",
   "framework": "nextjs",
   "regions": ["hnd1"],
-  "env": {
-    "UNSPLASH_ACCESS_KEY": "@unsplash-access-key",
-    "PEXELS_API_KEY": "@pexels-api-key",
-    "PIXABAY_API_KEY": "@pixabay-api-key",
-    "NEXT_PUBLIC_APP_URL": "@next-public-app-url"
-  },
   "headers": [
     {
       "source": "/api/(.*)",
