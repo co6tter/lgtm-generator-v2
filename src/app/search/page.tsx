@@ -9,8 +9,10 @@ import { SearchBar } from "@/components/search/SearchBar";
 import { TabSelector } from "@/components/search/TabSelector";
 import { ErrorMessage } from "@/components/ui/ErrorMessage";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { Toast } from "@/components/ui/Toast";
 import { useLGTM } from "@/hooks/useLGTM";
 import { useSearch } from "@/hooks/useSearch";
+import { useToast } from "@/hooks/useToast";
 import type { Image, ImageSource } from "@/types";
 
 const TABS = [
@@ -46,10 +48,13 @@ function SearchPageContent() {
   const {
     isProcessing: isGeneratingLGTM,
     generateLGTM,
-    copyToClipboard,
+    copyMarkdown,
     download,
     reset: resetLGTM,
   } = useLGTM();
+
+  // Toast notifications hook
+  const { toasts, showToast, hideToast } = useToast();
 
   // Update URL when search parameters change
   const updateURL = (query: string, source: ImageSource, page: number) => {
@@ -99,30 +104,29 @@ function SearchPageContent() {
     resetLGTM();
   };
 
-  // Handle copy - copy LGTM image to clipboard
-  const handleCopy = async () => {
+  // Handle markdown copy - copy markdown format to clipboard
+  const handleCopyMarkdown = async () => {
     try {
-      await copyToClipboard();
-      // Show success message (you can replace with a toast notification)
-      alert("クリップボードにコピーしました！");
+      await copyMarkdown();
+      showToast("マークダウンをコピーしました！", "success");
       handleCloseModal();
     } catch (err) {
-      console.error("Failed to copy to clipboard:", err);
-      alert(
-        "クリップボードへのコピーに失敗しました。ブラウザがクリップボードAPIをサポートしているか確認してください。",
-      );
+      console.error("Failed to copy markdown:", err);
+      showToast("マークダウンのコピーに失敗しました", "error");
     }
   };
 
   // Handle download - download LGTM image
   const handleDownload = () => {
     try {
-      const filename = `lgtm_${selectedImage?.id || Date.now()}.png`;
+      const timestamp = Date.now();
+      const filename = `lgtm-${timestamp}.png`;
       download(filename);
+      showToast("画像をダウンロードしました！", "success");
       handleCloseModal();
     } catch (err) {
       console.error("Failed to download image:", err);
-      alert("画像のダウンロードに失敗しました");
+      showToast("画像のダウンロードに失敗しました", "error");
     }
   };
 
@@ -234,12 +238,23 @@ function SearchPageContent() {
         <PreviewModal
           image={selectedImage}
           onClose={handleCloseModal}
-          onCopy={handleCopy}
+          onCopy={handleCopyMarkdown}
           onDownload={handleDownload}
           isOpen={true}
           isLoading={isGeneratingLGTM}
         />
       )}
+
+      {/* Toast notifications */}
+      {toasts.map((toast) => (
+        <Toast
+          key={toast.id}
+          message={toast.message}
+          type={toast.type}
+          duration={toast.duration}
+          onClose={() => hideToast(toast.id)}
+        />
+      ))}
     </div>
   );
 }
