@@ -32,6 +32,8 @@ jobs:
         run: npm run test:coverage
         env:
           UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
           NEXT_PUBLIC_APP_URL: http://localhost:3000
 
       - name: Upload coverage reports
@@ -76,12 +78,16 @@ jobs:
         run: npm run build
         env:
           UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
           NEXT_PUBLIC_APP_URL: http://localhost:3000
 
       - name: Run E2E tests
         run: npm run test:e2e
         env:
           UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
           NEXT_PUBLIC_APP_URL: http://localhost:3000
 
       - name: Upload Playwright report
@@ -135,6 +141,8 @@ jobs:
         run: npm run build
         env:
           UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
           NEXT_PUBLIC_APP_URL: http://localhost:3000
 
       - name: Check build output
