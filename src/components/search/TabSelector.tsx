@@ -1,16 +1,16 @@
 "use client";
 
-import type { ImageType } from "@/types";
+import type { ImageSource } from "@/types";
 
 export interface Tab {
-  id: ImageType;
+  id: ImageSource;
   label: string;
 }
 
 export interface TabSelectorProps {
   tabs: Tab[];
-  activeTab: ImageType;
-  onTabChange: (tabId: ImageType) => void;
+  activeTab: ImageSource;
+  onTabChange: (tabId: ImageSource) => void;
   className?: string;
 }
 
