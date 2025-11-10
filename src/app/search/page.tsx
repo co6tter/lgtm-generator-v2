@@ -143,7 +143,9 @@ function SearchPageContent() {
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="mb-4 text-3xl font-bold text-gray-900">画像を検索</h1>
+        <h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-gray-100">
+          画像を検索
+        </h1>
         <SearchBar
           onSearch={handleSearch}
           defaultValue={searchQuery}
@@ -158,10 +160,10 @@ function SearchPageContent() {
 
       {/* Content */}
       {!showResults && (
-        <div className="flex min-h-[400px] items-center justify-center rounded-lg bg-white p-8 text-center">
+        <div className="flex min-h-[400px] items-center justify-center rounded-lg bg-white dark:bg-gray-800 p-8 text-center">
           <div>
             <svg
-              className="mx-auto mb-4 h-16 w-16 text-gray-400"
+              className="mx-auto mb-4 h-16 w-16 text-gray-400 dark:text-gray-500"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -174,10 +176,10 @@ function SearchPageContent() {
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
             </svg>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-gray-600 dark:text-gray-300">
               検索キーワードを入力してください
             </p>
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
               2文字以上で検索できます
             </p>
           </div>
@@ -205,12 +207,12 @@ function SearchPageContent() {
           {data && !isLoading && !error && (
             <>
               {/* Results info */}
-              <div className="mb-4 text-sm text-gray-600">
+              <div className="mb-4 text-sm text-gray-600 dark:text-gray-300">
                 <span className="font-semibold">
                   {data.totalResults.toLocaleString()}
                 </span>{" "}
                 件の検索結果{" "}
-                <span className="text-gray-400">
+                <span className="text-gray-400 dark:text-gray-500">
                   - ページ {data.page} / {data.totalPages}
                 </span>
               </div>

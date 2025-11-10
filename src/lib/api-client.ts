@@ -16,7 +16,9 @@ class APIClientError extends Error {
   }
 }
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000/api";
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL
+  ? `${process.env.NEXT_PUBLIC_APP_URL}/api`
+  : "/api";
 
 interface SearchParams {
   query: string;

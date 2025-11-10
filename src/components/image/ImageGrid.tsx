@@ -16,10 +16,12 @@ export function ImageGrid({
 }: ImageGridProps) {
   if (images.length === 0) {
     return (
-      <div className="flex min-h-[400px] items-center justify-center rounded-lg bg-white p-8 text-center">
+      <div className="flex min-h-[400px] items-center justify-center rounded-lg bg-white dark:bg-gray-800 p-8 text-center">
         <div>
-          <p className="text-lg text-gray-600">画像が見つかりませんでした</p>
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="text-lg text-gray-600 dark:text-gray-300">
+            画像が見つかりませんでした
+          </p>
+          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
             別のキーワードで検索してみてください
           </p>
         </div>
