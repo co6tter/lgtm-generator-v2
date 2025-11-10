@@ -61,12 +61,12 @@ export function PreviewModal({
       aria-modal="true"
       aria-labelledby="modal-title"
     >
-      <div className="relative w-full max-w-4xl animate-fade-in rounded-lg bg-white p-6 shadow-2xl sm:p-8">
+      <div className="relative w-full max-w-4xl animate-fade-in rounded-lg bg-white dark:bg-gray-800 p-6 shadow-2xl sm:p-8">
         {/* 閉じるボタン */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="absolute right-4 top-4 rounded-full p-2 text-gray-500 dark:text-gray-400 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
           aria-label="モーダルを閉じる"
         >
           <svg
@@ -88,7 +88,10 @@ export function PreviewModal({
 
         {/* 画像プレビュー */}
         <div className="mb-6">
-          <h2 id="modal-title" className="mb-4 text-center text-xl font-bold">
+          <h2
+            id="modal-title"
+            className="mb-4 text-center text-xl font-bold text-gray-900 dark:text-gray-100"
+          >
             LGTM プレビュー
           </h2>
           <div className="relative mx-auto aspect-video max-h-[60vh] w-full overflow-hidden rounded-lg bg-gray-100">
@@ -102,17 +105,15 @@ export function PreviewModal({
             />
             {/* LGTMテキストオーバーレイ */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="rounded-lg bg-black/50 px-8 py-4">
-                <p className="text-6xl font-bold text-white drop-shadow-lg sm:text-7xl md:text-8xl">
-                  LGTM
-                </p>
-              </div>
+              <p className="text-4xl font-normal text-white/60 sm:text-5xl md:text-6xl">
+                LGTM
+              </p>
             </div>
           </div>
         </div>
 
         {/* クレジット情報 */}
-        <div className="mb-6 text-center text-sm text-gray-600">
+        <div className="mb-6 text-center text-sm text-gray-600 dark:text-gray-300">
           <p>
             Photo by{" "}
             {image.photographerUrl ? (

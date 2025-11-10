@@ -25,9 +25,9 @@ const DEFAULT_OPTIONS: Required<LGTMOptions> = {
   text: "LGTM",
   fontSize: 0, // Will be calculated based on image height
   fontFamily: "Arial, sans-serif",
-  textColor: "#ffffff",
-  shadowColor: "#000000",
-  shadowBlur: 10,
+  textColor: "rgba(255, 255, 255, 0.6)",
+  shadowColor: "transparent",
+  shadowBlur: 0,
   shadowOffsetX: 0,
   shadowOffsetY: 0,
 };
@@ -49,45 +49,16 @@ async function loadImage(url: string): Promise<HTMLImageElement> {
 }
 
 /**
- * Calculate responsive font size (10-15% of image height)
+ * Calculate responsive font size (4% of image height)
  */
 function calculateFontSize(imageHeight: number, options: LGTMOptions): number {
   if (options.fontSize && options.fontSize > 0) {
     return options.fontSize;
   }
 
-  // Use 12% of image height as default
-  const percentage = 0.12;
+  // Use 4% of image height as default (reduced from 5%)
+  const percentage = 0.04;
   return Math.floor(imageHeight * percentage);
-}
-
-/**
- * Draw text with shadow on canvas
- */
-function drawTextWithShadow(
-  ctx: CanvasRenderingContext2D,
-  text: string,
-  x: number,
-  y: number,
-  options: Required<LGTMOptions>,
-): void {
-  // Draw shadow
-  ctx.shadowColor = options.shadowColor;
-  ctx.shadowBlur = options.shadowBlur;
-  ctx.shadowOffsetX = options.shadowOffsetX;
-  ctx.shadowOffsetY = options.shadowOffsetY;
-
-  // Draw text
-  ctx.fillStyle = options.textColor;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(text, x, y);
-
-  // Reset shadow
-  ctx.shadowColor = "transparent";
-  ctx.shadowBlur = 0;
-  ctx.shadowOffsetX = 0;
-  ctx.shadowOffsetY = 0;
 }
 
 /**
@@ -122,17 +93,18 @@ export async function processImageWithLGTM(
 
     // Calculate font size if not provided
     const fontSize = calculateFontSize(img.height, options);
-    ctx.font = `bold ${fontSize}px ${mergedOptions.fontFamily}`;
+    const fontString = `400 ${fontSize}px ${mergedOptions.fontFamily}`;
+    ctx.font = fontString;
 
     // Calculate text position (center of image)
     const x = canvas.width / 2;
     const y = canvas.height / 2;
 
-    // Draw text with shadow
-    drawTextWithShadow(ctx, mergedOptions.text, x, y, {
-      ...mergedOptions,
-      fontSize,
-    });
+    // Draw text directly without any shadow or background
+    ctx.fillStyle = mergedOptions.textColor;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(mergedOptions.text, x, y);
 
     // Convert to data URL
     const dataUrl = canvas.toDataURL("image/png", 1.0);

@@ -49,7 +49,7 @@ export function SearchBar({
       <div className="relative">
         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
           <svg
-            className="h-5 w-5 text-gray-400"
+            className="h-5 w-5 text-gray-400 dark:text-gray-500"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -69,8 +69,8 @@ export function SearchBar({
           value={query}
           onChange={(e) => handleChange(e.target.value)}
           placeholder="検索キーワードを入力..."
-          className={`w-full rounded-md border py-3 pl-11 pr-4 text-gray-900 placeholder-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            error ? "border-red-500" : "border-gray-300"
+          className={`w-full rounded-md border py-3 pl-11 pr-4 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            error ? "border-red-500" : "border-gray-300 dark:border-gray-600"
           }`}
           aria-label="検索キーワード"
           aria-invalid={!!error}

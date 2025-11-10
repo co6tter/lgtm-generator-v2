@@ -13,10 +13,13 @@
 - **高速**: ローディング時間を最小化、即座にフィードバック
 - **アクセシブル**: キーボード操作対応、WCAG 2.1 Level A 準拠
 - **レスポンシブ**: モバイル・タブレット・デスクトップ全対応
+- **ダークモード対応**: システム設定に基づく自動切り替え
 
 ### 1.2 デザインシステム
 
 #### カラーパレット
+
+**ライトモード:**
 ```
 Primary Color (アクション):
 - Primary: #3b82f6 (Blue-500)
@@ -32,6 +35,29 @@ Text Color:
 - Primary Text: #111827 (Gray-900)
 - Secondary Text: #6b7280 (Gray-500)
 - Placeholder: #9ca3af (Gray-400)
+
+Status Color:
+- Success: #10b981 (Green-500)
+- Error: #ef4444 (Red-500)
+- Warning: #f59e0b (Amber-500)
+```
+
+**ダークモード:**
+```
+Primary Color (アクション):
+- Primary: #3b82f6 (Blue-500)
+- Primary Hover: #2563eb (Blue-600)
+- Primary Active: #1d4ed8 (Blue-700)
+
+Secondary Color (背景・枠線):
+- Background: #1f2937 (Gray-800)
+- Surface: #111827 (Gray-900)
+- Border: #4b5563 (Gray-600)
+
+Text Color:
+- Primary Text: #f9fafb (Gray-50)
+- Secondary Text: #d1d5db (Gray-300)
+- Placeholder: #6b7280 (Gray-500)
 
 Status Color:
 - Success: #10b981 (Green-500)
@@ -510,3 +536,4 @@ Phase 1 完了後に追加予定:
 | バージョン | 日付 | 変更者 | 変更内容 |
 |----------|------|--------|---------|
 | 1.0 | 2025-11-08 | Claude | 初版作成 |
+| 1.1 | 2025-11-10 | Claude | ダークモード対応のカラーパレット追加 |

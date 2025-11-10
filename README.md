@@ -9,6 +9,7 @@ A modern web application for generating "LGTM" (Looks Good To Me) images to use 
 - **Markdown Copy**: One-click copy in GitHub/GitLab compatible markdown format
 - **Image Download**: Save generated LGTM images locally
 - **Responsive Design**: Works seamlessly on desktop and mobile
+- **Dark Mode**: Full dark mode support for comfortable viewing
 - **Fast Performance**: Optimized with Next.js 16 and modern web technologies
 - **Accessible**: WCAG 2.1 Level A compliant
 
@@ -243,6 +244,7 @@ Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md)
 - [x] Markdown copy
 - [x] Image download
 - [x] Responsive design
+- [x] Dark mode support
 - [x] Comprehensive testing
 
 ### Phase 2 (Future)
