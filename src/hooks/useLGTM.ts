@@ -79,12 +79,12 @@ export function useLGTM(): UseLGTMResult {
    * Format: ![LGTM](imageUrl)
    */
   const copyMarkdown = useCallback(async () => {
-    if (!originalImageUrl) {
-      throw new Error("No image URL available");
+    if (!processedImage) {
+      throw new Error("No processed image available");
     }
 
     try {
-      await copyMarkdownToClipboard(originalImageUrl);
+      await copyMarkdownToClipboard(processedImage.dataUrl);
     } catch (err) {
       const error =
         err instanceof Error
@@ -93,7 +93,7 @@ export function useLGTM(): UseLGTMResult {
       setError(error);
       throw error;
     }
-  }, [originalImageUrl]);
+  }, [processedImage]);
 
   /**
    * Download processed image
