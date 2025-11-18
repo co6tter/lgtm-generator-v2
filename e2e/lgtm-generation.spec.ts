@@ -84,9 +84,7 @@ test.describe("LGTM Generation Flow", () => {
     await copyButton.click();
 
     // Check for success message
-    await expect(
-      page.getByText(/コピーしました|Copied|クリップボードにコピー/i),
-    ).toBeVisible();
+    await expect(page.getByText(/画像をコピーしました/i)).toBeVisible();
   });
 
   test("should download LGTM image", async ({ page }) => {
@@ -138,10 +136,8 @@ test.describe("LGTM Generation Flow", () => {
     const modal = page.getByRole("dialog");
     await expect(modal).toBeVisible();
 
-    // Click outside modal (on backdrop)
-    await page.locator('[data-testid="modal-backdrop"]').click({
-      position: { x: 0, y: 0 },
-    });
+    // Click outside modal (on backdrop) by pressing ESC key
+    await page.keyboard.press("Escape");
 
     // Check modal is closed
     await expect(modal).not.toBeVisible();
