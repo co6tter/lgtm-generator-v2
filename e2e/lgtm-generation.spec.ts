@@ -1,8 +1,13 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("LGTM Generation Flow", () => {
+  // Small test image (1x1 transparent PNG) as data URL
+  // This avoids external URL dependencies in CI environment
+  const testImageDataUrl =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+
   test.beforeEach(async ({ page }) => {
-    // Mock API to provide test images
+    // Mock API to provide test images with data URL
     await page.route("**/api/search/**", async (route) => {
       await route.fulfill({
         status: 200,
@@ -15,8 +20,8 @@ test.describe("LGTM Generation Flow", () => {
             images: [
               {
                 id: "1",
-                url: "https://images.unsplash.com/photo-1",
-                thumbnailUrl: "https://images.unsplash.com/thumb-1",
+                url: testImageDataUrl,
+                thumbnailUrl: testImageDataUrl,
                 width: 800,
                 height: 600,
                 alt: "Cat photo",
@@ -67,8 +72,7 @@ test.describe("LGTM Generation Flow", () => {
     await expect(modal.locator("canvas, img")).toBeVisible();
   });
 
-  // Skip clipboard test in CI environment due to image loading restrictions
-  test.skip("should copy LGTM to clipboard", async ({ page, context }) => {
+  test("should copy LGTM to clipboard", async ({ page, context }) => {
     // Grant clipboard permissions
     await context.grantPermissions(["clipboard-write", "clipboard-read"]);
 
@@ -80,19 +84,18 @@ test.describe("LGTM Generation Flow", () => {
     const modal = page.getByRole("dialog");
     await expect(modal).toBeVisible();
 
-    // Wait for LGTM text to appear (image generation complete)
-    await expect(modal.getByText("LGTM")).toBeVisible();
+    // Wait for copy button to be enabled (image generation complete)
+    const copyButton = modal.getByRole("button", { name: /画像をコピー/i });
+    await expect(copyButton).toBeEnabled();
 
     // Click copy button
-    const copyButton = modal.getByRole("button", { name: /コピー|copy/i });
     await copyButton.click();
 
     // Check for success message
     await expect(page.getByText(/画像をコピーしました/i)).toBeVisible();
   });
 
-  // Skip download test in CI environment due to image loading restrictions
-  test.skip("should download LGTM image", async ({ page }) => {
+  test("should download LGTM image", async ({ page }) => {
     // Click on an image
     const firstImage = page.getByRole("listitem").first();
     await firstImage.click();
@@ -101,16 +104,16 @@ test.describe("LGTM Generation Flow", () => {
     const modal = page.getByRole("dialog");
     await expect(modal).toBeVisible();
 
-    // Wait for LGTM text to appear (image generation complete)
-    await expect(modal.getByText("LGTM")).toBeVisible();
+    // Wait for download button to be enabled (image generation complete)
+    const downloadButton = modal.getByRole("button", {
+      name: /画像をダウンロード/i,
+    });
+    await expect(downloadButton).toBeEnabled();
 
     // Set up download listener
     const downloadPromise = page.waitForEvent("download");
 
     // Click download button
-    const downloadButton = modal.getByRole("button", {
-      name: /ダウンロード|download/i,
-    });
     await downloadButton.click();
 
     // Wait for download to start
