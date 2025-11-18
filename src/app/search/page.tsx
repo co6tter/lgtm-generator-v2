@@ -48,7 +48,7 @@ function SearchPageContent() {
   const {
     isProcessing: isGeneratingLGTM,
     generateLGTM,
-    copyMarkdown,
+    copyImageToClipboard,
     download,
     reset: resetLGTM,
   } = useLGTM();
@@ -104,15 +104,15 @@ function SearchPageContent() {
     resetLGTM();
   };
 
-  // Handle markdown copy - copy markdown format to clipboard
-  const handleCopyMarkdown = async () => {
+  // Handle image copy - copy image to clipboard
+  const handleCopyImage = async () => {
     try {
-      await copyMarkdown();
-      showToast("マークダウンをコピーしました！", "success");
+      await copyImageToClipboard();
+      showToast("画像をコピーしました！", "success");
       handleCloseModal();
     } catch (err) {
-      console.error("Failed to copy markdown:", err);
-      showToast("マークダウンのコピーに失敗しました", "error");
+      console.error("Failed to copy image:", err);
+      showToast("画像のコピーに失敗しました", "error");
     }
   };
 
@@ -240,7 +240,7 @@ function SearchPageContent() {
         <PreviewModal
           image={selectedImage}
           onClose={handleCloseModal}
-          onCopy={handleCopyMarkdown}
+          onCopy={handleCopyImage}
           onDownload={handleDownload}
           isOpen={true}
           isLoading={isGeneratingLGTM}
