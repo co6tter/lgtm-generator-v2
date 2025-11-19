@@ -1,23 +1,45 @@
 /**
  * Image processing utilities using Canvas API
- * Handles LGTM text overlay on images
+ * Handles LGTM text overlay on images with automatic resizing
  */
 
+/**
+ * Options for LGTM image processing
+ */
 export interface LGTMOptions {
+  /** Text to overlay on the image (default: "LGTM") */
   text?: string;
+  /** Font size in pixels (default: auto-calculated as 4% of image height) */
   fontSize?: number;
+  /** Font family (default: "Arial, sans-serif") */
   fontFamily?: string;
+  /** Text color (default: "rgba(255, 255, 255, 0.6)") */
   textColor?: string;
+  /** Shadow color (default: "transparent") */
   shadowColor?: string;
+  /** Shadow blur radius (default: 0) */
   shadowBlur?: number;
+  /** Shadow offset X (default: 0) */
   shadowOffsetX?: number;
+  /** Shadow offset Y (default: 0) */
   shadowOffsetY?: number;
+  /** Maximum width in pixels (default: 800) */
+  maxWidth?: number;
+  /** Maximum height in pixels (default: 800) */
+  maxHeight?: number;
 }
 
+/**
+ * Result of image processing
+ */
 export interface ProcessImageResult {
+  /** Data URL of the processed image */
   dataUrl: string;
+  /** Blob of the processed image */
   blob: Blob;
+  /** Width of the processed image in pixels */
   width: number;
+  /** Height of the processed image in pixels */
   height: number;
 }
 
@@ -30,6 +52,8 @@ const DEFAULT_OPTIONS: Required<LGTMOptions> = {
   shadowBlur: 0,
   shadowOffsetX: 0,
   shadowOffsetY: 0,
+  maxWidth: 800, // Default max width (800px)
+  maxHeight: 800, // Default max height (800px)
 };
 
 /**
@@ -49,7 +73,8 @@ async function loadImage(url: string): Promise<HTMLImageElement> {
 }
 
 /**
- * Calculate responsive font size (4% of image height)
+ * Calculate responsive font size based on image height
+ * Default: 4% of image height
  */
 function calculateFontSize(imageHeight: number, options: LGTMOptions): number {
   if (options.fontSize && options.fontSize > 0) {
@@ -62,8 +87,49 @@ function calculateFontSize(imageHeight: number, options: LGTMOptions): number {
 }
 
 /**
- * Process image and overlay LGTM text
- * Returns data URL and blob for copying/downloading
+ * Calculate dimensions to fit within max width/height while maintaining aspect ratio
+ */
+function calculateResizedDimensions(
+  originalWidth: number,
+  originalHeight: number,
+  maxWidth: number,
+  maxHeight: number,
+): { width: number; height: number } {
+  // If image is already smaller than max dimensions, return original size
+  if (originalWidth <= maxWidth && originalHeight <= maxHeight) {
+    return { width: originalWidth, height: originalHeight };
+  }
+
+  // Calculate aspect ratio
+  const aspectRatio = originalWidth / originalHeight;
+
+  let newWidth = originalWidth;
+  let newHeight = originalHeight;
+
+  // If width exceeds max width
+  if (newWidth > maxWidth) {
+    newWidth = maxWidth;
+    newHeight = Math.floor(newWidth / aspectRatio);
+  }
+
+  // If height still exceeds max height
+  if (newHeight > maxHeight) {
+    newHeight = maxHeight;
+    newWidth = Math.floor(newHeight * aspectRatio);
+  }
+
+  return { width: newWidth, height: newHeight };
+}
+
+/**
+ * Process image with LGTM text overlay
+ * - Resizes image to fit within max dimensions while maintaining aspect ratio
+ * - Overlays LGTM text in the center
+ * - Returns data URL and blob for copying/downloading
+ *
+ * @param imageUrl - URL of the image to process
+ * @param options - Optional configuration for text and image processing
+ * @returns ProcessImageResult containing dataUrl, blob, width, and height
  */
 export async function processImageWithLGTM(
   imageUrl: string,
@@ -75,24 +141,32 @@ export async function processImageWithLGTM(
     // Load image
     const img = await loadImage(imageUrl);
 
-    // Create canvas
+    // Merge options with defaults
+    const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
+
+    // Calculate resized dimensions
+    const { width, height } = calculateResizedDimensions(
+      img.width,
+      img.height,
+      mergedOptions.maxWidth,
+      mergedOptions.maxHeight,
+    );
+
+    // Create canvas with resized dimensions
     const canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
+    canvas.width = width;
+    canvas.height = height;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) {
       throw new Error("Failed to get canvas context");
     }
 
-    // Draw original image
-    ctx.drawImage(img, 0, 0);
+    // Draw image with new dimensions (this will resize the image)
+    ctx.drawImage(img, 0, 0, width, height);
 
-    // Merge options with defaults
-    const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
-
-    // Calculate font size if not provided
-    const fontSize = calculateFontSize(img.height, options);
+    // Calculate font size if not provided (based on resized height)
+    const fontSize = calculateFontSize(height, options);
     const fontString = `400 ${fontSize}px ${mergedOptions.fontFamily}`;
     ctx.font = fontString;
 
@@ -143,6 +217,8 @@ export async function processImageWithLGTM(
 
 /**
  * Copy image to clipboard
+ * @param blob - Image blob to copy
+ * @throws Error if Clipboard API is not supported or copy fails
  */
 export async function copyImageToClipboard(blob: Blob): Promise<void> {
   try {
@@ -163,7 +239,9 @@ export async function copyImageToClipboard(blob: Blob): Promise<void> {
 
 /**
  * Copy markdown text to clipboard
- * Format: ![LGTM](imageUrl)
+ * @param imageUrl - URL of the image
+ * @returns Markdown formatted as: ![LGTM](imageUrl)
+ * @throws Error if Clipboard API is not supported or copy fails
  */
 export async function copyMarkdownToClipboard(imageUrl: string): Promise<void> {
   try {
@@ -181,6 +259,9 @@ export async function copyMarkdownToClipboard(imageUrl: string): Promise<void> {
 
 /**
  * Download image as file
+ * @param blob - Image blob to download
+ * @param filename - Filename for the downloaded file (default: "lgtm.png")
+ * @throws Error if download fails
  */
 export function downloadImage(blob: Blob, filename = "lgtm.png"): void {
   try {
