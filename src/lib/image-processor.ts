@@ -23,9 +23,9 @@ export interface LGTMOptions {
   shadowOffsetX?: number;
   /** Shadow offset Y (default: 0) */
   shadowOffsetY?: number;
-  /** Maximum width in pixels (default: 800) */
+  /** Maximum width in pixels (default: 400) */
   maxWidth?: number;
-  /** Maximum height in pixels (default: 800) */
+  /** Maximum height in pixels (default: 400) */
   maxHeight?: number;
 }
 
@@ -52,8 +52,8 @@ const DEFAULT_OPTIONS: Required<LGTMOptions> = {
   shadowBlur: 0,
   shadowOffsetX: 0,
   shadowOffsetY: 0,
-  maxWidth: 800, // Default max width (800px)
-  maxHeight: 800, // Default max height (800px)
+  maxWidth: 400, // Default max width (400px)
+  maxHeight: 400, // Default max height (400px)
 };
 
 /**
@@ -180,10 +180,10 @@ export async function processImageWithLGTM(
     ctx.textBaseline = "middle";
     ctx.fillText(mergedOptions.text, x, y);
 
-    // Convert to data URL
-    const dataUrl = canvas.toDataURL("image/png", 1.0);
+    // Convert to data URL (JPEG format for smaller file size while maintaining quality)
+    const dataUrl = canvas.toDataURL("image/jpeg", 1.0);
 
-    // Convert to blob for downloading
+    // Convert to blob for downloading (JPEG format for smaller file size while maintaining quality)
     const blob = await new Promise<Blob>((resolve, reject) => {
       canvas.toBlob(
         (b) => {
@@ -193,7 +193,7 @@ export async function processImageWithLGTM(
             reject(new Error("Failed to create blob from canvas"));
           }
         },
-        "image/png",
+        "image/jpeg",
         1.0,
       );
     });
@@ -227,7 +227,7 @@ export async function copyImageToClipboard(blob: Blob): Promise<void> {
     }
 
     const clipboardItem = new ClipboardItem({
-      "image/png": blob,
+      "image/jpeg": blob,
     });
 
     await navigator.clipboard.write([clipboardItem]);
@@ -260,10 +260,10 @@ export async function copyMarkdownToClipboard(imageUrl: string): Promise<void> {
 /**
  * Download image as file
  * @param blob - Image blob to download
- * @param filename - Filename for the downloaded file (default: "lgtm.png")
+ * @param filename - Filename for the downloaded file (default: "lgtm.jpg")
  * @throws Error if download fails
  */
-export function downloadImage(blob: Blob, filename = "lgtm.png"): void {
+export function downloadImage(blob: Blob, filename = "lgtm.jpg"): void {
   try {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
