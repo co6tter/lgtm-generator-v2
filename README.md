@@ -1,293 +1,138 @@
-# LGTM Generator v2
+# lgtm-generator-v2
 
-A modern web application for generating "LGTM" (Looks Good To Me) images to use in Pull Request reviews. Search high-quality images from multiple sources and overlay LGTM text instantly.
+## Overview
 
-## Features
+LGTM Generator v2は、複数の画像APIを利用してLGTM（Looks Good To Me）画像を簡単に生成できるWebアプリケーションです。Unsplash、Pexels、Pixabayの3つの画像ソースから画像を検索し、LGTM画像として加工・ダウンロードすることができます。
 
-- **Multi-Source Image Search**: Search from Unsplash, Pexels, and Pixabay
-- **Instant LGTM Generation**: Add LGTM text overlay to any image
-- **Markdown Copy**: One-click copy in GitHub/GitLab compatible markdown format
-- **Image Download**: Save generated LGTM images locally
-- **Responsive Design**: Works seamlessly on desktop and mobile
-- **Dark Mode**: Full dark mode support for comfortable viewing
-- **Fast Performance**: Optimized with Next.js 16 and modern web technologies
-- **Accessible**: WCAG 2.1 Level A compliant
-
-## Demo
-
-<!-- TODO: Add demo GIF or screenshot -->
-Live Demo: [Coming Soon]
-
-## Screenshots
-
-<!-- TODO: Add screenshots -->
+主な機能：
+- 複数の画像API（Unsplash、Pexels、Pixabay）からの画像検索
+- LGTM画像のプレビュー表示
+- 画像のコピー・ダウンロード機能
+- ダークモード対応
+- レスポンシブデザイン
+- 画像の自動リサイズ（400px、JPEG形式）
 
 ## Tech Stack
 
-### Frontend
-- **Framework**: [Next.js](https://nextjs.org/) 16 with App Router
-- **Language**: [TypeScript](https://www.typescriptlang.org/) 5
-- **UI Library**: [React](https://react.dev/) 19
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) 4
-- **Data Fetching**: [SWR](https://swr.vercel.app/)
-- **Validation**: [Zod](https://zod.dev/)
+- **Framework**: Next.js 16.0.1 (App Router)
+- **Language**: TypeScript 5
+- **UI Library**: React 19.2.0
+- **Styling**: Tailwind CSS 4
+- **Data Fetching**: SWR 2.3.6
+- **Validation**: Zod 4.1.12
+- **Testing**: Vitest 4.0.8, Playwright 1.56.1, Testing Library
+- **Code Quality**: Biome 2.2.0
+- **Git Hooks**: Lefthook 2.0.2
 
-### Backend
-- **API Routes**: Next.js API Routes (Serverless)
-- **Image Processing**: Canvas API
+## Setup
 
-### External APIs
-- **Unsplash API**: High-quality photos (50 req/hour)
-- **Pexels API**: High-quality photos (200 req/hour)
-- **Pixabay API**: Photos + illustrations (5,000 req/hour)
+### 必要な環境
 
-### Development Tools
-- **Linter/Formatter**: [Biome](https://biomejs.dev/)
-- **Testing**: [Vitest](https://vitest.dev/) (Unit/Integration), [Playwright](https://playwright.dev/) (E2E)
-- **Git Hooks**: [Lefthook](https://github.com/evilmartians/lefthook)
-- **CI/CD**: GitHub Actions
+- Node.js 20以上
+- 各画像APIのAPIキー（Unsplash、Pexels、Pixabay）
 
-### Deployment
-- **Platform**: [Vercel](https://vercel.com/)
+### インストール手順
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js 20 or later
-- npm or pnpm
-- API keys for image search services (free)
-
-### Installation
-
-1. Clone the repository:
+1. リポジトリをクローン
 ```bash
-git clone https://github.com/co6tter/lgtm-generator-v2.git
+git clone <repository-url>
 cd lgtm-generator-v2
 ```
 
-2. Install dependencies:
+2. 依存関係をインストール
 ```bash
 npm install
 ```
 
-3. Set up environment variables:
-```bash
-cp .env.local.example .env.local
-```
+3. 環境変数を設定
 
-Edit `.env.local` and add your API keys:
+`.env.local`ファイルを作成し、以下の環境変数を設定します：
 
 ```env
-UNSPLASH_ACCESS_KEY=your_unsplash_key_here
-PEXELS_API_KEY=your_pexels_key_here
-PIXABAY_API_KEY=your_pixabay_key_here
-NEXT_PUBLIC_APP_URL=http://localhost:3000
+UNSPLASH_ACCESS_KEY=your_unsplash_access_key
+PEXELS_API_KEY=your_pexels_api_key
+PIXABAY_API_KEY=your_pixabay_api_key
 ```
 
-#### Get API Keys (Free):
-- **Unsplash**: [Unsplash Developers](https://unsplash.com/developers)
-- **Pexels**: [Pexels API](https://www.pexels.com/api/)
-- **Pixabay**: [Pixabay API](https://pixabay.com/api/docs/)
-
-4. Run the development server:
+4. 開発サーバーを起動
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+ブラウザで `http://localhost:3000` を開いてアプリケーションを確認できます。
 
-## Available Scripts
+### その他のコマンド
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm start` | Start production server |
-| `npm test` | Run unit tests |
-| `npm run test:ui` | Run tests with UI |
-| `npm run test:coverage` | Run tests with coverage report |
-| `npm run test:e2e` | Run E2E tests |
-| `npm run test:e2e:ui` | Run E2E tests with UI |
-| `npm run lint` | Run Biome linter |
-| `npm run format` | Format code with Biome |
+```bash
+# ビルド
+npm run build
+
+# 本番環境で起動
+npm start
+
+# リント
+npm run lint
+
+# フォーマット
+npm run format
+
+# テスト実行
+npm test
+
+# テストカバレッジ
+npm run test:coverage
+
+# E2Eテスト
+npm run test:e2e
+```
 
 ## Usage
 
-1. **Search Images**: Enter a keyword (e.g., "cat", "success") and select a source
-2. **Select Image**: Click on an image from the search results
-3. **Preview**: The LGTM text will be automatically overlaid
-4. **Copy or Download**:
-   - Click "Copy Markdown" to copy `![LGTM](image_url)` format
-   - Click "Download" to save the image locally
+1. トップページで画像ソース（Unsplash、Pexels、Pixabay）を選択
+2. 検索バーにキーワードを入力して画像を検索
+3. 検索結果から気に入った画像をクリック
+4. プレビューモーダルで画像を確認
+5. LGTM画像をコピーまたはダウンロード
 
-## Project Structure
+## Directory Structure
 
 ```
 lgtm-generator-v2/
+├── docs/                       # プロジェクトドキュメント
+│   ├── 01_requirements.md     # 要件定義
+│   ├── 02_uiux-design.md      # UI/UXデザイン
+│   ├── 03_data-design.md      # データ設計
+│   ├── 04_api-design.md       # API設計
+│   ├── 05_architecture.md     # アーキテクチャ設計
+│   └── DEPLOYMENT.md          # デプロイメント
 ├── src/
-│   ├── app/                # Next.js App Router
-│   │   ├── api/           # API Routes
-│   │   │   ├── health/    # Health check endpoint
-│   │   │   └── search/    # Image search endpoints (unsplash, pexels, pixabay)
-│   │   ├── search/        # Search results page
-│   │   ├── layout.tsx     # Root layout
-│   │   ├── page.tsx       # Home page
-│   │   └── globals.css    # Global styles
-│   ├── components/        # React components
-│   │   ├── image/         # Image-related components (ImageCard, ImageGrid, etc.)
-│   │   ├── layout/        # Layout components (Header, Footer, etc.)
-│   │   ├── modal/         # Modal components (PreviewModal, etc.)
-│   │   ├── search/        # Search-related components (SearchBar, TabSelector, etc.)
-│   │   ├── ui/            # Reusable UI components (Button, LoadingSpinner, etc.)
-│   │   └── index.ts       # Component exports
-│   ├── hooks/             # Custom React hooks (useSearch, useLGTM, etc.)
-│   ├── lib/               # Utility functions and libraries
-│   │   ├── api/           # API clients, validators, transformers, error handlers
-│   │   ├── api-client.ts  # Main API client
-│   │   ├── cache.ts       # Cache management
-│   │   └── image-processor.ts  # Canvas-based image processing
-│   └── types/             # TypeScript type definitions
-├── e2e/                   # E2E tests (Playwright)
-│   ├── search.spec.ts
-│   ├── lgtm-generation.spec.ts
-│   └── error-handling.spec.ts
-├── docs/                  # Documentation
-│   ├── 01_requirements.md
-│   └── 05_architecture.md
-├── public/                # Static assets
-├── .github/
-│   └── workflows/         # GitHub Actions CI/CD
-│       ├── deploy.yml
-│       └── test.yml
-├── README.md              # This file
-├── CONTRIBUTING.md        # Contribution guidelines
-├── CHANGELOG.md           # Version history
-└── LICENSE                # MIT License
+│   ├── app/                   # Next.js App Router
+│   │   ├── api/              # APIルート
+│   │   │   ├── health/       # ヘルスチェック
+│   │   │   └── search/       # 画像検索API（各ソース）
+│   │   ├── search/           # 検索結果ページ
+│   │   ├── globals.css       # グローバルスタイル
+│   │   ├── layout.tsx        # ルートレイアウト
+│   │   └── page.tsx          # トップページ
+│   ├── components/            # Reactコンポーネント
+│   │   ├── image/            # 画像関連コンポーネント
+│   │   ├── layout/           # レイアウトコンポーネント
+│   │   ├── modal/            # モーダルコンポーネント
+│   │   ├── search/           # 検索関連コンポーネント
+│   │   └── ui/               # 汎用UIコンポーネント
+│   ├── hooks/                 # カスタムReact hooks
+│   ├── lib/                   # ライブラリとユーティリティ
+│   │   └── api/              # API関連ユーティリティ
+│   └── types/                 # TypeScript型定義
+├── biome.json                 # Biome設定
+├── lefthook.yml               # Git hooks設定
+├── next.config.ts             # Next.js設定
+├── package.json               # プロジェクト依存関係
+├── postcss.config.mjs         # PostCSS設定
+├── tailwind.config.ts         # Tailwind CSS設定
+└── tsconfig.json              # TypeScript設定
 ```
-
-**Note:** Unit and integration tests are co-located with their source files (e.g., `*.test.ts`, `*.test.tsx`)
-
-## Testing
-
-### Unit & Integration Tests
-
-```bash
-# Run all tests
-npm test
-
-# Run tests with UI
-npm run test:ui
-
-# Run tests with coverage
-npm run test:coverage
-```
-
-### E2E Tests
-
-```bash
-# Run E2E tests
-npm run test:e2e
-
-# Run E2E tests with UI
-npm run test:e2e:ui
-
-# View test report
-npm run test:e2e:report
-```
-
-## Deployment
-
-### Deploy to Vercel
-
-1. Push your code to GitHub
-2. Import the project to [Vercel](https://vercel.com/new)
-3. Add environment variables in Vercel dashboard:
-   - `UNSPLASH_ACCESS_KEY`
-   - `PEXELS_API_KEY`
-   - `PIXABAY_API_KEY`
-   - `NEXT_PUBLIC_APP_URL`
-4. Deploy!
-
-Or use the Vercel button:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fco6tter%2Flgtm-generator-v2)
-
-For detailed deployment instructions, see [Deployment Guide](docs/DEPLOYMENT.md).
-
-## Contributing
-
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
-
-### Development Workflow
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feat/amazing-feature`)
-3. Make your changes
-4. Run tests (`npm test && npm run test:e2e`)
-5. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-6. Push to the branch (`git push origin feat/amazing-feature`)
-7. Open a Pull Request
-
-## Documentation
-
-- [Requirements](docs/01_requirements.md)
-- [Architecture](docs/05_architecture.md)
-- [Deployment Guide](docs/DEPLOYMENT.md)
-- [Contributing Guide](CONTRIBUTING.md)
-
-## Roadmap
-
-### Phase 1 (Current)
-- [x] Multi-source image search (Unsplash, Pexels, Pixabay)
-- [x] LGTM text overlay
-- [x] Markdown copy
-- [x] Image download
-- [x] Responsive design
-- [x] Dark mode support
-- [x] Comprehensive testing
-
-### Phase 2 (Future)
-- [ ] Custom text input
-- [ ] Text customization (size, color, position)
-- [ ] Favorites feature
-- [ ] History feature
-- [ ] Google Image Search integration
-- [ ] SNS sharing
-
-## Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-
-## Performance
-
-- First Contentful Paint (FCP): < 1.5s
-- Largest Contentful Paint (LCP): < 2.5s
-- Time to Interactive (TTI): < 3.0s
-
-## Security
-
-- HTTPS only
-- API keys protected via environment variables
-- XSS protection with React automatic escaping
-- CSP (Content Security Policy) headers
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Images provided by [Unsplash](https://unsplash.com/), [Pexels](https://www.pexels.com/), and [Pixabay](https://pixabay.com/)
-- Built with [Next.js](https://nextjs.org/) and [Vercel](https://vercel.com/)
-
-## Support
-
-If you encounter any issues or have questions, please [open an issue](https://github.com/co6tter/lgtm-generator-v2/issues/new).
-
----
-
-Made with ❤️ by [@co6tter](https://github.com/co6tter)
+This repository is for personal/private use only.
