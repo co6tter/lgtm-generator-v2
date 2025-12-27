@@ -76,6 +76,25 @@ test.describe("LGTM Generation Flow", () => {
     // Grant clipboard permissions
     await context.grantPermissions(["clipboard-write", "clipboard-read"]);
 
+    // Mock the Clipboard API before navigation to support image blob writing
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, "clipboard", {
+        value: {
+          write: async () => Promise.resolve(),
+          writeText: async () => Promise.resolve(),
+        },
+        writable: false,
+        configurable: true,
+      });
+    });
+
+    // Navigate to start the test
+    await page.goto("/");
+    const searchInput = page.getByPlaceholder("検索キーワードを入力...");
+    await searchInput.fill("cat");
+    await searchInput.press("Enter");
+    await page.waitForURL("**/search?query=cat**");
+
     // Click on an image
     const firstImage = page.getByRole("listitem").first();
     await firstImage.click();
